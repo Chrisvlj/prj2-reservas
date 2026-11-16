@@ -26,9 +26,17 @@ La tarea 4 no se salta. El proyecto exige una prueba automatizada de no permitir
 
 ## 3. Cambio de requisito a mitad del desarrollo
 
-El enunciado pide introducir un cambio inesperado a mitad del trabajo y recorrerlo así: cambio solicitado, actualizar especificación, actualizar criterios, actualizar plan, modificar código, modificar pruebas, ver el resultado.
+Cambio solicitado el 2026-11-16, con el núcleo de las tareas 1 a 9 ya en `main`: un estudiante no puede tener más de dos reservas confirmadas en la misma semana (lunes a domingo). El docente no tiene ese tope.
 
-Ese cambio no se inventa ahora. Cuando se pida, se agrega una fila en este plan y una entrada en `docs/decisions.md`, y se muestra el diff de specs, pruebas y código. Hasta entonces el alcance es el de `specs/requirements.md`.
+| Paso | Dónde quedó |
+|---|---|
+| Cambio solicitado | [#11](https://github.com/Chrisvlj/prj2-reservas/issues/11) |
+| Especificación | RF-14, RN-25, ADR-005 |
+| Criterios | CA-24 a CA-28 |
+| Plan | Esta sección |
+| Código | `src/reservas/services.py`, conteo antes de ocupar el cupo |
+| Pruebas | `tests/test_tope_semanal.py` |
+| Resultado | La tercera reserva de la semana responde `RN-25` y el cupo sigue libre |
 
 ## 4. Issues
 
@@ -42,4 +50,4 @@ El tablero de trabajo son issues en `Chrisvlj/prj2-reservas`, un issue por cada 
 
 ## 6. Qué queda fuera de este plan
 
-Presentación (LibreOffice Impress) y el cambio de requisito de la sección 3. Se hacen cuando el núcleo de las tareas 1 a 7 está en verde. La tarea 8 puede demostrarse con las pantallas mínimas de reserva aunque el estilo se ajuste después.
+Presentación (LibreOffice Impress). El núcleo de las tareas 1 a 9 está en `main` y el cambio de la sección 3 está en el issue #11.

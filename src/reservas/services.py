@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from reservas.errors import PermisoError, ReglaError
@@ -9,8 +9,10 @@ from reservas.notifications import despachar
 from reservas.rules import (
     ANTELACION_CANCELACION,
     ANTELACION_EN_LINEA,
+    TOPE_SEMANAL_ESTUDIANTE,
     fin_bloque,
     inicio_bloque,
+    semana_de,
     solapan,
     validar_rango,
 )
@@ -94,6 +96,21 @@ def disponibilidad(session: Session, fecha: date) -> list[dict]:
     return resultado
 
 
+def _confirmadas_en_semana(session: Session, usuario_id: int, fecha: date) -> int:
+    desde, hasta = semana_de(fecha)
+    cantidad = session.scalar(
+        select(func.count())
+        .select_from(Reserva)
+        .where(
+            Reserva.usuario_id == usuario_id,
+            Reserva.estado == "confirmada",
+            Reserva.fecha >= desde.isoformat(),
+            Reserva.fecha <= hasta.isoformat(),
+        )
+    )
+    return int(cantidad or 0)
+
+
 def _solape_de_usuario(
     session: Session,
     usuario_id: int,
@@ -148,7 +165,8 @@ def crear_reserva(
     laboratorio = session.get(Laboratorio, laboratorio_id)
     if laboratorio is None or not laboratorio.activo:
         raise ReglaError("RN-10", "El laboratorio no está disponible")
-    if session.get(Usuario, usuario_id) is None:
+    titular = session.get(Usuario, usuario_id)
+    if titular is None:
         raise ReglaError("RN-04", "El titular no existe")
 
     franjas = asegurar_franjas(session, laboratorio_id, fecha)
@@ -158,6 +176,8 @@ def crear_reserva(
             raise ReglaError("RN-10", "La franja no se puede reservar")
     if _solape_de_usuario(session, usuario_id, fecha, bloque_inicio, bloque_fin):
         raise ReglaError("RN-07", "Ya tiene una reserva confirmada en ese horario")
+    if titular.rol == "estudiante" and _confirmadas_en_semana(session, usuario_id, fecha) >= TOPE_SEMANAL_ESTUDIANTE:
+        raise ReglaError("RN-25", "Un estudiante puede tener como máximo 2 reservas confirmadas en la misma semana")
     for franja in pedidas:
         if franja.estado == "reservada":
             raise ReglaError("RN-08", "Ese laboratorio ya está reservado en ese horario")

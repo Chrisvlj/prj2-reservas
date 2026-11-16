@@ -134,6 +134,32 @@ Cubre RF-11, RN-23.
 
 Dado el bloque 10 `reservada`, cuando Rosa intenta pasarlo a mantenimiento, entonces la operación se rechaza y la reserva sigue `confirmada`.
 
+## Tope semanal del estudiante
+
+La semana es de lunes a domingo. El 16 de noviembre de 2026 es lunes, así que el 17, el 18 y el 19 caen en la misma semana. El 24 cae en la siguiente.
+
+### CA-24 — La tercera reserva de la semana se rechaza
+
+Dado que Ana tiene reservas confirmadas el 2026-11-17 y el 2026-11-18, cuando reserva el 2026-11-19, entonces recibe `RN-25` y ese cupo sigue `libre`.
+
+Cubre RF-14, RN-25.
+
+### CA-25 — Cancelar libera un cupo del tope
+
+Dado CA-24, cuando Ana cancela la reserva del 2026-11-17, y luego reserva el 2026-11-19, entonces la nueva reserva queda `confirmada`.
+
+### CA-26 — El docente no tiene tope semanal
+
+Cuando Luis confirma reservas el 17, el 18 y el 19 de noviembre de 2026, entonces las tres quedan `confirmada`.
+
+### CA-27 — Otra semana no suma
+
+Dado que Ana tiene dos reservas confirmadas en la semana del 16 de noviembre, cuando reserva el 2026-11-24, entonces la reserva se confirma.
+
+### CA-28 — La presencial también cuenta
+
+Dado que Rosa registró dos reservas presenciales a nombre de Ana en esa semana, cuando Ana intenta una tercera en línea, entonces recibe `RN-25`.
+
 ## Trazabilidad
 
 ### CA-23 — Queda quién reservó

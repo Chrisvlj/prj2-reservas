@@ -24,6 +24,12 @@ Fecha: 2026-11-16. Estado: aceptada.
 
 El outcome pide avisar por correo y ofrecer otro horario. La reserva del docente y el estado `desplazada` se confirman aunque el SMTP falle. Siempre queda una fila de notificación con el cuerpo (laboratorios alternativos, o la frase de que no hay). Así la evidencia del curso no depende de un buzón externo.
 
+## ADR-005 — Tope de dos reservas confirmadas por semana para el estudiante
+
+Fecha: 2026-11-16. Estado: aceptada.
+
+Cambio pedido a mitad del desarrollo, después de tener el núcleo en `main`. Un estudiante acumula reservas y deja menos huecos al resto. El tope es 2 reservas en estado `confirmada` dentro de la semana calendario, de lunes a domingo. El docente no tiene tope: su prioridad ya está en el desplazamiento. Cancelar, un no-show o un desplazamiento sacan la reserva del conteo. La reserva presencial cuenta, porque el titular sigue siendo el estudiante.
+
 ## ADR-004 — El uso de IA se documenta, no se presenta como otra persona
 
 Fecha: 2026-11-16. Estado: aceptada.

@@ -33,3 +33,13 @@ Supuestos que la Fase 1 dejaba abiertos y esta sesión cerró en la especificaci
 | Solicitud | Proseguir, con el acceso a Projects ya renovado. |
 | Resultado | Aplicación en `src/reservas` y 26 pruebas en verde, incluida la de no doble reserva concurrente. La jornada quedó en 07:00–20:20 porque 16 bloques de 50 minutos no llegan a las 21:00. `gh auth status` sigue mostrando un token sin el alcance `project` (`repo`, `gist`, `read:org`, `admin:public_key`), así que el tablero no se creó. |
 | Decisión | Seguir con los issues como tablero de trabajo hasta que el token de `gh` incluya `project`. El fallo de correo no revierte un desplazamiento. |
+
+## 2026-11-16 — Cambio de requisito: tope semanal del estudiante
+
+| Campo | Contenido |
+|---|---|
+| Actividad | Recorrer un cambio de especificación: regla, criterios, plan, código y pruebas. |
+| IA utilizada | Cursor, agente CLI Grok 4.7. |
+| Solicitud | Proseguir con la siguiente fase. |
+| Resultado | RN-25 y RF-14: un estudiante tiene como máximo 2 reservas confirmadas de lunes a domingo. CA-24 a CA-28 cubren el rechazo, la liberación al cancelar, la excepción del docente, la semana siguiente y la reserva presencial. |
+| Decisión | El tope no se aplica al docente (ADR-005). La semana se cuenta de lunes a domingo porque el calendario institucional no definió otro corte. |

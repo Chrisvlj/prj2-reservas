@@ -50,4 +50,4 @@ El tablero de trabajo son issues en `Chrisvlj/prj2-reservas`, un issue por cada 
 
 ## 6. Qué queda fuera de este plan
 
-Presentación (LibreOffice Impress). El núcleo de las tareas 1 a 9 está en `main` y el cambio de la sección 3 está en el issue #11.
+La presentación está en `docs/presentacion/reservas-laboratorios.pptx` (y en `.odp` para Impress). El núcleo de las tareas 1 a 9 está en `main` y el cambio de la sección 3 está en el issue #11.

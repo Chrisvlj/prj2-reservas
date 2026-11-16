@@ -63,3 +63,13 @@ Supuestos que la Fase 1 dejaba abiertos y esta sesión cerró en la especificaci
 | Solicitud | Usar ese archivo como plantilla e incluir el contenido de reservas de laboratorios. |
 | Resultado | `docs/presentacion/reservas-laboratorios.pptx` y `.odp` quedan con el azul, el crema y el naranja de esa plantilla. El contenido es el de este proyecto: reglas, pruebas, tope semanal y el ciclo si piden un cambio. |
 | Decisión | No se reutilizó el diseño anterior. Los nombres de la portada son los del mismo grupo, tal como están en la plantilla. |
+
+## 2026-11-16 — La presentación sigue el PDF, no la historia de CitaFácil
+
+| Campo | Contenido |
+|---|---|
+| Actividad | Reescribir el relato de las diapositivas. |
+| IA utilizada | Cursor, agente CLI Grok 4.7. |
+| Solicitud | No copiar la plantilla. Tomarla como ejemplo visual y seguir lo que el PDF pide en la presentación. |
+| Resultado | Diez diapositivas: problema y resultado (ODD), especificación (SDD), código, pruebas, el cambio de mitad y el ciclo si piden otro cambio en la sustentación. El color sigue siendo el de la plantilla. |
+| Decisión | No se trasladan historias de usuario, bugs de QA ni las diez restricciones del proyecto 1. Esos puntos no están en el enunciado de este proyecto. |

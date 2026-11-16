@@ -53,3 +53,13 @@ Supuestos que la Fase 1 dejaba abiertos y esta sesión cerró en la especificaci
 | Solicitud | Seguir con la siguiente fase. |
 | Resultado | `docs/presentacion/reservas-laboratorios.pptx` y el mismo archivo en `.odp`. Doce diapositivas: problema, resultado, usuarios, recorrido, reglas, el tope semanal, pruebas, proceso y qué hacer si piden un cambio en vivo. Cada diapositiva tiene notas para quien presente. |
 | Decisión | La presentación abre con el resultado para el usuario. La tecnología aparece después, como el medio que impide el cruce de horario. |
+
+## 2026-11-16 — Presentación con la plantilla de CitaFácil
+
+| Campo | Contenido |
+|---|---|
+| Actividad | Rehacer la presentación usando el diseño de `CitaFácil — Sprint HU-1 a HU-6.pdf`. |
+| IA utilizada | Cursor, agente CLI Grok 4.7. |
+| Solicitud | Usar ese archivo como plantilla e incluir el contenido de reservas de laboratorios. |
+| Resultado | `docs/presentacion/reservas-laboratorios.pptx` y `.odp` quedan con el azul, el crema y el naranja de esa plantilla. El contenido es el de este proyecto: reglas, pruebas, tope semanal y el ciclo si piden un cambio. |
+| Decisión | No se reutilizó el diseño anterior. Los nombres de la portada son los del mismo grupo, tal como están en la plantilla. |

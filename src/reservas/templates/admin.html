@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block contenido %}
+<section class="tarjeta">
+  <h1>Administración</h1>
+  <p>Ocupación del {{ hoy }}: {{ ocupacion.reservadas }} de {{ ocupacion.denominador }} franjas ({{ "%.0f"|format(ocupacion.porcentaje * 100) }} %).</p>
+  <h2>Reserva presencial</h2>
+  <form method="post" action="/admin/presencial">
+    <div class="fila">
+      <div>
+        <label for="usuario_id">Titular</label>
+        <select id="usuario_id" name="usuario_id">
+          {% for persona in personas %}
+            <option value="{{ persona.id }}">{{ persona.nombre }} ({{ persona.rol }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="laboratorio_id">Laboratorio</label>
+        <input id="laboratorio_id" name="laboratorio_id" type="number" min="1" value="1">
+      </div>
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date" value="{{ hoy }}" required>
+      </div>
+      <div>
+        <label for="bloque_inicio">Desde</label>
+        <input id="bloque_inicio" name="bloque_inicio" type="number" min="1" max="16" value="1">
+      </div>
+      <div>
+        <label for="bloque_fin">Hasta</label>
+        <input id="bloque_fin" name="bloque_fin" type="number" min="1" max="16" value="1">
+      </div>
+      <button type="submit">Registrar</button>
+    </div>
+  </form>
+  <h2>Mantenimiento</h2>
+  <form method="post" action="/admin/mantenimiento">
+    <div class="fila">
+      <input name="laboratorio_id" type="number" min="1" value="1" aria-label="Laboratorio">
+      <input name="fecha" type="date" value="{{ hoy }}" required aria-label="Fecha">
+      <input name="bloque" type="number" min="1" max="16" value="1" aria-label="Bloque">
+      <select name="activo" aria-label="Acción">
+        <option value="true">Bloquear</option>
+        <option value="false">Reabrir</option>
+      </select>
+      <button type="submit">Aplicar</button>
+    </div>
+  </form>
+  <h2>Liberar franja deshabilitada</h2>
+  <form method="post" action="/admin/liberar">
+    <div class="fila">
+      <input name="laboratorio_id" type="number" min="1" value="1" aria-label="Laboratorio">
+      <input name="fecha" type="date" value="{{ hoy }}" required aria-label="Fecha">
+      <input name="bloque" type="number" min="1" max="16" value="1" aria-label="Bloque">
+      <button type="submit">Liberar</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

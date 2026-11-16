@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>implementation-plan.md</title>
+<style>
+  body { font: 16px/1.45 "Segoe UI", sans-serif; margin: 32px 40px; color: #1a1a1a; background: #fff; max-width: 980px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 17px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f3f3; }
+  code { font-family: ui-monospace, monospace; font-size: 0.92em; background: #f6f6f6; padding: 0 3px; }
+  pre { background: #f6f6f6; padding: 12px; overflow: auto; }
+  pre code { background: transparent; padding: 0; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+<h1>Plan de implementación</h1>
+<p>Orden de construcción. Cada ítem sale de las especificaciones y termina en prueba antes de seguir al siguiente comportamiento. Los issues de GitHub usan el mismo título.</p>
+<h2>1. Secuencia</h2>
+<table><tbody>
+<tr><th>Orden</th><th>Issue</th><th>Tarea</th><th>Spec</th><th>Prueba que la cierra</th></tr>
+<tr><td>1</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/1">#1</a></td><td>Esquema SQLite: usuario, laboratorio, franja, reserva, notificación. Semilla de Ana, Luis, Rosa, Lab 1 y Lab 2.</td><td>data-model</td><td>La semilla se lee en un test de humo.</td></tr>
+<tr><td>2</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/2">#2</a></td><td>Consultar disponibilidad de una fecha, creando franjas <code>libre</code> que falten.</td><td>RF-01, API disponibilidad</td><td>CA-01</td></tr>
+<tr><td>3</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/3">#3</a></td><td>Crear reserva en línea de 1 a 3 bloques, con antelación y transacción.</td><td>RN-02, RN-05, RN-11</td><td>CA-03, CA-04, CA-05</td></tr>
+<tr><td>4</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/4">#4</a></td><td>Rechazar solape del mismo usuario y solape del mismo laboratorio, incluidos dos intentos concurrentes.</td><td>RN-07, RN-08, RN-09</td><td>CA-07, CA-08, CA-09, CA-10</td></tr>
+<tr><td>5</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/5">#5</a></td><td>Cancelar con las dos consecuencias (libre o deshabilitada) y no-show.</td><td>RN-17 a RN-21</td><td>CA-16, CA-17, CA-18, CA-20</td></tr>
+<tr><td>6</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/6">#6</a></td><td>Liberar, mantenimiento y reserva presencial del administrador.</td><td>RN-06, RN-22, RN-23</td><td>CA-06, CA-19, CA-21, CA-22</td></tr>
+<tr><td>7</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/7">#7</a></td><td>Desplazamiento docente y notificación con o sin alternativa.</td><td>RN-12 a RN-16</td><td>CA-11 a CA-15</td></tr>
+<tr><td>8</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/8">#8</a></td><td>Páginas de consulta, reserva y administración sobre los mismos casos de uso.</td><td>RNF-01, sección Páginas</td><td>CA-02, recorrido manual</td></tr>
+<tr><td>9</td><td><a href="https://github.com/Chrisvlj/prj2-reservas/issues/9">#9</a></td><td>Lectura de ocupación del periodo con la fórmula del modelo de datos.</td><td>outcomes, métrica 70 %</td><td>Consulta reproducible sobre datos de prueba.</td></tr>
+</tbody></table>
+<p>La tarea 4 no se salta. El proyecto exige una prueba automatizada de no permitir la doble reserva.</p>
+<h2>2. Definición de hecho de cada tarea</h2>
+<ul>
+<li>La regla que toca sigue escrita igual en <code>specs/</code>, o la spec se actualizó antes que el código.</li>
+<li>Hay prueba automática del criterio citado, y pasa.</li>
+<li>No queda una segunda copia de la regla en la plantilla HTML.</li>
+</ul>
+<h2>3. Cambio de requisito a mitad del desarrollo</h2>
+<p>El enunciado pide introducir un cambio inesperado a mitad del trabajo y recorrerlo así: cambio solicitado, actualizar especificación, actualizar criterios, actualizar plan, modificar código, modificar pruebas, ver el resultado.</p>
+<p>Ese cambio no se inventa ahora. Cuando se pida, se agrega una fila en este plan y una entrada en <code>docs/decisions.md</code>, y se muestra el diff de specs, pruebas y código. Hasta entonces el alcance es el de <code>specs/requirements.md</code>.</p>
+<h2>4. Issues</h2>
+<p>El tablero de trabajo son issues en <code>Chrisvlj/prj2-reservas</code>, un issue por cada fila de la tabla de secuencia, con etiqueta de la fase de construcción (<code>datos</code>, <code>reglas</code>, <code>qa</code>, <code>ui</code>). Cerrar el issue requiere la prueba de esa fila en verde.</p>
+<h2>5. Rama e integración</h2>
+<ul>
+<li><code>main</code> se mantiene ejecutable.</li>
+<li>Cada fila de la tabla se trabaja en una rama <code>tarea/&lt;numero&gt;-&lt;nombre-corto&gt;</code>.</li>
+<li>La integración a <code>main</code> es un pull request que enlaza el issue y muestra la prueba.</li>
+</ul>
+<h2>6. Qué queda fuera de este plan</h2>
+<p>Presentación (LibreOffice Impress) y el cambio de requisito de la sección 3. Se hacen cuando el núcleo de las tareas 1 a 7 está en verde. La tarea 8 puede demostrarse con las pantallas mínimas de reserva aunque el estilo se ajuste después.</p>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Reservas de laboratorios</title>
+  <style>
+    body { font: 16px/1.4 "Segoe UI", sans-serif; margin: 0; color: #1c2430; background: #f4f6f8; }
+    header { background: #16324f; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: white; margin-left: 16px; }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .tarjeta { background: white; border: 1px solid #d5dde6; border-radius: 8px; padding: 16px; }
+    label { display: block; margin: 10px 0 4px; }
+    input, select, button { font: inherit; padding: 8px; }
+    button, .boton { background: #16324f; color: white; border: 0; border-radius: 4px; cursor: pointer; }
+    .error { background: #fde8e6; border: 1px solid #e3b0aa; padding: 8px 12px; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #d5dde6; padding: 6px; text-align: center; }
+    td.libre { background: #e5f6ea; }
+    td.reservada { background: #fde2e1; }
+    td.deshabilitada { background: #eceff3; }
+    td.mantenimiento { background: #fff4d5; }
+    .fila { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Reservas de laboratorios</strong>
+    <nav>
+      
+        <span>Ana · estudiante</span>
+        <a href="/">Disponibilidad</a>
+        <a href="/reservas">Mis reservas</a>
+        
+        <form action="/salir" method="post" style="display:inline"><button type="submit">Salir</button></form>
+      
+    </nav>
+  </header>
+  <main>
+    
+    
+<section class="tarjeta">
+  <h1>Mis reservas</h1>
+  
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Laboratorio</th><th>Bloques</th><th>Estado</th><th>Origen</th><th></th></tr>
+      </thead>
+      <tbody>
+        
+          <tr>
+            <td>2026-11-20</td>
+            <td>1</td>
+            <td>4–6</td>
+            <td>confirmada</td>
+            <td>en_linea</td>
+            <td>
+              
+                <form method="post" action="/reservas/1/cancelar">
+                  <button type="submit">Cancelar</button>
+                </form>
+              
+            </td>
+          </tr>
+        
+      </tbody>
+    </table>
+  
+</section>
+
+  </main>
+</body>
+</html>

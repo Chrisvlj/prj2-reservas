@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Reservas de laboratorios</title>
+  <style>
+    body { font: 16px/1.4 "Segoe UI", sans-serif; margin: 0; color: #1c2430; background: #f4f6f8; }
+    header { background: #16324f; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: white; margin-left: 16px; }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .tarjeta { background: white; border: 1px solid #d5dde6; border-radius: 8px; padding: 16px; }
+    label { display: block; margin: 10px 0 4px; }
+    input, select, button { font: inherit; padding: 8px; }
+    button, .boton { background: #16324f; color: white; border: 0; border-radius: 4px; cursor: pointer; }
+    .error { background: #fde8e6; border: 1px solid #e3b0aa; padding: 8px 12px; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #d5dde6; padding: 6px; text-align: center; }
+    td.libre { background: #e5f6ea; }
+    td.reservada { background: #fde2e1; }
+    td.deshabilitada { background: #eceff3; }
+    td.mantenimiento { background: #fff4d5; }
+    .fila { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Reservas de laboratorios</strong>
+    <nav>
+      
+        <span>Ana · estudiante</span>
+        <a href="/">Disponibilidad</a>
+        <a href="/reservas">Mis reservas</a>
+        
+        <form action="/salir" method="post" style="display:inline"><button type="submit">Salir</button></form>
+      
+    </nav>
+  </header>
+  <main>
+    
+    
+<section class="tarjeta">
+  <h1>Disponibilidad</h1>
+  <form method="get" action="/">
+    <label for="fecha">Fecha</label>
+    <input id="fecha" type="date" name="fecha" value="2026-11-16">
+    <button type="submit">Ver</button>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>Laboratorio</th>
+        
+          <th>1<br>07:00</th>
+        
+          <th>2<br>07:50</th>
+        
+          <th>3<br>08:40</th>
+        
+          <th>4<br>09:30</th>
+        
+          <th>5<br>10:20</th>
+        
+          <th>6<br>11:10</th>
+        
+          <th>7<br>12:00</th>
+        
+          <th>8<br>12:50</th>
+        
+          <th>9<br>13:40</th>
+        
+          <th>10<br>14:30</th>
+        
+          <th>11<br>15:20</th>
+        
+          <th>12<br>16:10</th>
+        
+          <th>13<br>17:00</th>
+        
+          <th>14<br>17:50</th>
+        
+          <th>15<br>18:40</th>
+        
+          <th>16<br>19:30</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <th>Lab 1</th>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+        </tr>
+      
+        <tr>
+          <th>Lab 2</th>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+            <td class="libre">libre</td>
+          
+        </tr>
+      
+    </tbody>
+  </table>
+  
+  <form method="post" action="/reservas">
+    <div class="fila">
+      <div>
+        <label for="laboratorio_id">Laboratorio</label>
+        <select id="laboratorio_id" name="laboratorio_id">
+          
+            <option value="1">Lab 1</option>
+          
+            <option value="2">Lab 2</option>
+          
+        </select>
+      </div>
+      <input type="hidden" name="fecha" value="2026-11-16">
+      <div>
+        <label for="bloque_inicio">Desde el bloque</label>
+        <input id="bloque_inicio" name="bloque_inicio" type="number" min="1" max="16" value="1" required>
+      </div>
+      <div>
+        <label for="bloque_fin">Hasta el bloque</label>
+        <input id="bloque_fin" name="bloque_fin" type="number" min="1" max="16" value="1" required>
+      </div>
+      <button type="submit">Reservar</button>
+    </div>
+  </form>
+  
+</section>
+
+  </main>
+</body>
+</html>

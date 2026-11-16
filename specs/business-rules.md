@@ -50,6 +50,7 @@ Cada regla es comprobable. La prueba que la cubre está en `specs/acceptance-cri
 | RN-22 | Solo el administrador pasa un bloque `deshabilitada` a `libre`. |
 | RN-23 | El administrador pasa bloques `libre` a `mantenimiento` y, al cerrar el mantenimiento, de `mantenimiento` a `libre`. No pone en mantenimiento un bloque `reservada` sin cancelar o desplazar antes la reserva. |
 | RN-24 | Una franja `deshabilitada` o en `mantenimiento` no se ofrece como alternativa en RN-15. |
+| RN-25 | Un estudiante puede tener como máximo 2 reservas en estado `confirmada` cuya fecha caiga en la misma semana calendario, de lunes a domingo. La tercera se rechaza. El docente no tiene este tope. Una reserva `cancelada`, `desplazada` o `no_show` no cuenta. La reserva presencial cuenta para el estudiante titular. |
 
 ## 6. Estados
 

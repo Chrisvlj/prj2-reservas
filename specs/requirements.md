@@ -29,6 +29,7 @@ Una cuenta tiene un solo rol.
 | RF-11 | El administrador bloquea bloques por mantenimiento y los vuelve a abrir al cerrar el mantenimiento. | Mantenimiento. |
 | RF-12 | El administrador registra una reserva presencial a nombre de un usuario, también cuando falta menos de 1 hora. | Las reservas físicas deben verse en el sistema. |
 | RF-13 | Cada reserva guarda quién la creó y cuándo, para poder explicar un cruce si el sistema fallara. | Margen de menos de 4 cruces por semana, con trazabilidad. |
+| RF-14 | Un estudiante no puede tener más de dos reservas confirmadas en la misma semana. El docente no tiene ese tope. | Cambio de requisito a mitad del desarrollo. Reparte el uso entre más estudiantes. |
 
 ## 3. Requisitos no funcionales
 

@@ -40,6 +40,11 @@ CA-02 (reservar en menos de 3 minutos) se recorre en la interfaz y se anota en l
 | `test_ca21_mantenimiento` | CA-21 |
 | `test_ca22_no_mantenimiento_sobre_reserva` | CA-22 |
 | `test_ca23_presencial_guarda_quien_la_creo` | CA-23 |
+| `test_ca24_tercera_reserva_de_la_semana` | CA-24 |
+| `test_ca25_cancelar_libera_el_tope` | CA-25 |
+| `test_ca26_docente_sin_tope_semanal` | CA-26 |
+| `test_ca27_otra_semana_no_suma` | CA-27 |
+| `test_ca28_presencial_cuenta_para_el_estudiante` | CA-28 |
 
 ## 3. Cómo se aísla el tiempo y la base
 

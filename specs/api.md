@@ -121,4 +121,4 @@ Solo administrador. Cada bloque debe estar `deshabilitada`. Pasan a `libre` (RN-
 
 ## 6. Códigos de regla en los rechazos
 
-El campo `codigo` usa el identificador RN cuando el rechazo es una regla de negocio. Varios pueden aplicar; se devuelve el primero que falle en este orden: rol y sesión, RN-02, RN-06 o RN-05, RN-10, RN-07, RN-08, y el resto de la operación (desplazamiento, cancelación, mantenimiento).
+El campo `codigo` usa el identificador RN cuando el rechazo es una regla de negocio. Varios pueden aplicar; se devuelve el primero que falle en este orden: rol y sesión, RN-02, RN-06 o RN-05, RN-10, RN-07, RN-25, RN-08, y el resto de la operación (desplazamiento, cancelación, mantenimiento).

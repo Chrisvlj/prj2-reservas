@@ -25,3 +25,11 @@ def validar_rango(bloque_inicio: int, bloque_fin: int) -> None:
 
 def solapan(inicio_a: int, fin_a: int, inicio_b: int, fin_b: int) -> bool:
     return inicio_a <= fin_b and inicio_b <= fin_a
+
+
+TOPE_SEMANAL_ESTUDIANTE = 2
+
+
+def semana_de(fecha: date) -> tuple[date, date]:
+    inicio = fecha - timedelta(days=fecha.weekday())
+    return inicio, inicio + timedelta(days=6)

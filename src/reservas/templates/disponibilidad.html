@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block contenido %}
+<section class="tarjeta">
+  <h1>Disponibilidad</h1>
+  <form method="get" action="/">
+    <label for="fecha">Fecha</label>
+    <input id="fecha" type="date" name="fecha" value="{{ fecha }}">
+    <button type="submit">Ver</button>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>Laboratorio</th>
+        {% for bloque in laboratorios[0].bloques %}
+          <th>{{ bloque.bloque }}<br>{{ bloque.inicio }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for lab in laboratorios %}
+        <tr>
+          <th>{{ lab.nombre }}</th>
+          {% for bloque in lab.bloques %}
+            <td class="{{ bloque.estado }}">{{ bloque.estado }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if usuario.rol != "administrador" %}
+  <form method="post" action="/reservas">
+    <div class="fila">
+      <div>
+        <label for="laboratorio_id">Laboratorio</label>
+        <select id="laboratorio_id" name="laboratorio_id">
+          {% for lab in laboratorios %}
+            <option value="{{ lab.laboratorio_id }}">{{ lab.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <input type="hidden" name="fecha" value="{{ fecha }}">
+      <div>
+        <label for="bloque_inicio">Desde el bloque</label>
+        <input id="bloque_inicio" name="bloque_inicio" type="number" min="1" max="16" value="1" required>
+      </div>
+      <div>
+        <label for="bloque_fin">Hasta el bloque</label>
+        <input id="bloque_fin" name="bloque_fin" type="number" min="1" max="16" value="1" required>
+      </div>
+      <button type="submit">Reservar</button>
+    </div>
+  </form>
+  {% endif %}
+</section>
+{% endblock %}

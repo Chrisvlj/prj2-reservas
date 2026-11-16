@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>requirements.md</title>
+<style>
+  body { font: 16px/1.45 "Segoe UI", sans-serif; margin: 32px 40px; color: #1a1a1a; background: #fff; max-width: 980px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 17px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f3f3; }
+  code { font-family: ui-monospace, monospace; font-size: 0.92em; background: #f6f6f6; padding: 0 3px; }
+  pre { background: #f6f6f6; padding: 12px; overflow: auto; }
+  pre code { background: transparent; padding: 0; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+<h1>Requisitos — Sistema de Reservas de Laboratorios</h1>
+<p>Traducción del outcome (<code>specs/outcomes.md</code>) a capacidades del sistema. Las reglas numeradas viven en <code>specs/business-rules.md</code>. Los criterios de aceptación que las verifican están en <code>specs/acceptance-criteria.md</code>.</p>
+<h2>1. Actores</h2>
+<table><tbody>
+<tr><th>Actor</th><th>Descripción</th></tr>
+<tr><td>Estudiante</td><td>Consulta disponibilidad y reserva para clase o uso personal.</td></tr>
+<tr><td>Docente</td><td>Consulta y reserva con prioridad: puede desplazar una reserva de estudiante.</td></tr>
+<tr><td>Administrador</td><td>Registra lo que ocurre en físico (reservas presenciales, mantenimiento) y libera franjas deshabilitadas.</td></tr>
+</tbody></table>
+<p>Una cuenta tiene un solo rol.</p>
+<h2>2. Requisitos funcionales</h2>
+<table><tbody>
+<tr><th>ID</th><th>Requisito</th><th>Origen en el outcome</th></tr>
+<tr><td>RF-01</td><td>El usuario autenticado ve, para una fecha, qué laboratorios y bloques están libres, reservados, deshabilitados o en mantenimiento.</td><td>Ver disponibilidad en tiempo real, sin ir al laboratorio.</td></tr>
+<tr><td>RF-02</td><td>Estudiante y docente crean una reserva de 1 a 3 bloques consecutivos en un laboratorio libre.</td><td>Reservar sin desplazarse.</td></tr>
+<tr><td>RF-03</td><td>El sistema rechaza una reserva que se solape con otra reserva confirmada del mismo laboratorio.</td><td>Se elimina el cruce de horario. Quien reserva primero conserva el cupo.</td></tr>
+<tr><td>RF-04</td><td>El sistema rechaza que la misma persona tenga dos reservas confirmadas solapadas, aunque sean en laboratorios distintos.</td><td>No hay reservas simultáneas en laboratorios distintos.</td></tr>
+<tr><td>RF-05</td><td>Una reserva en línea exige al menos 60 minutos de antelación respecto del inicio. Con menos tiempo, solo el administrador puede registrarla como reserva presencial.</td><td>Mínimo 1 hora; si no, solo presencial.</td></tr>
+<tr><td>RF-06</td><td>El docente puede tomar un horario ya reservado por un estudiante. La reserva del estudiante pasa a desplazada, se le notifica y se le proponen otros laboratorios libres en ese mismo horario.</td><td>Prioridad del docente, sin límite de tiempo, con correo y otro horario.</td></tr>
+<tr><td>RF-07</td><td>Cancelar con 24 horas o más de antelación deja los bloques libres.</td><td>Cancelación con 1 día o más.</td></tr>
+<tr><td>RF-08</td><td>Cancelar con menos de 24 horas deja los bloques deshabilitados.</td><td>Cancelación tardía.</td></tr>
+<tr><td>RF-09</td><td>Marcar no-show deja los bloques deshabilitados.</td><td>El horario no se libera.</td></tr>
+<tr><td>RF-10</td><td>Solo el administrador libera una franja deshabilitada, tras la solicitud presencial.</td><td>Liberación solo presencial, vía administrador.</td></tr>
+<tr><td>RF-11</td><td>El administrador bloquea bloques por mantenimiento y los vuelve a abrir al cerrar el mantenimiento.</td><td>Mantenimiento.</td></tr>
+<tr><td>RF-12</td><td>El administrador registra una reserva presencial a nombre de un usuario, también cuando falta menos de 1 hora.</td><td>Las reservas físicas deben verse en el sistema.</td></tr>
+<tr><td>RF-13</td><td>Cada reserva guarda quién la creó y cuándo, para poder explicar un cruce si el sistema fallara.</td><td>Margen de menos de 4 cruces por semana, con trazabilidad.</td></tr>
+</tbody></table>
+<h2>3. Requisitos no funcionales</h2>
+<table><tbody>
+<tr><th>ID</th><th>Requisito</th></tr>
+<tr><td>RNF-01</td><td>Completar una reserva (consultar, elegir, confirmar) cabe en menos de 3 minutos para quien ya tiene cuenta.</td></tr>
+<tr><td>RNF-02</td><td>Dos intentos simultáneos sobre el mismo laboratorio y bloques no pueden dejar dos reservas confirmadas. La comprobación y la escritura ocurren en la misma transacción.</td></tr>
+<tr><td>RNF-03</td><td>La disponibilidad que muestra la consulta es la que usa la creación de la reserva. No hay un estado paralelo en papel.</td></tr>
+<tr><td>RNF-04</td><td>El stack, la base de datos y el despliegue quedan descritos en <code>specs/architecture.md</code>.</td></tr>
+<tr><td>RNF-05</td><td>El uso de IA durante el desarrollo queda en <code>docs/ai-log.md</code>.</td></tr>
+</tbody></table>
+<h2>4. Fuera de alcance en esta versión</h2>
+<ul>
+<li>Pagos, listas de espera automáticas y reserva recurrente semanal.</li>
+<li>Aplicación móvil nativa.</li>
+<li>Más de un rol por cuenta.</li>
+<li>Un docente desplazando a otro docente. Entre docentes gana quien reservó primero.</li>
+<li>Envío real garantizado del correo: el sistema registra la notificación y el texto. El transporte SMTP es configurable y puede quedar en registro local durante el desarrollo.</li>
+</ul>
+<h2>5. Supuestos que la especificación fija</h2>
+<p>Estos puntos estaban abiertos en el outcome. Quedan decididos aquí para poder implementar. El registro de la decisión está en <code>docs/decisions.md</code>.</p>
+<ul>
+<li>Un bloque dura 50 minutos: 45 de uso y 5 de transición. Tres bloques son 150 minutos.</li>
+<li>La jornada reservable va de 07:00 a 21:00.</li>
+<li>&quot;Un día&quot; de antelación para cancelar significa 24 horas antes del inicio del primer bloque.</li>
+<li>&quot;Sin límite de tiempo&quot; en el desplazamiento docente significa que no aplica la antelación de 60 minutos. No puede desplazar un bloque que ya terminó.</li>
+<li>La oferta de otro horario al estudiante desplazado son los otros laboratorios libres en los mismos bloques. Si no hay ninguno, la notificación lo dice y no se crea otra reserva sola.</li>
+</ul>
+</body>
+</html>

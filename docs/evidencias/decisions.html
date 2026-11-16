@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>decisions.md</title>
+<style>
+  body { font: 16px/1.45 "Segoe UI", sans-serif; margin: 32px 40px; color: #1a1a1a; background: #fff; max-width: 980px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 17px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f3f3; }
+  code { font-family: ui-monospace, monospace; font-size: 0.92em; background: #f6f6f6; padding: 0 3px; }
+  pre { background: #f6f6f6; padding: 12px; overflow: auto; }
+  pre code { background: transparent; padding: 0; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+<h1>Decisiones</h1>
+<h2>ADR-001 — Una aplicación Python, FastAPI y SQLite</h2>
+<p>Fecha: 2026-11-16. Estado: aceptada.</p>
+<p>El sistema debe impedir dos reservas confirmadas del mismo cupo y mostrar esa misma disponibilidad. Una aplicación, una base SQLite y una transacción por escritura alcanzan para la entrega. FastAPI sirve las páginas y el JSON con los mismos casos de uso. pytest cubre las reglas sin levantar un segundo servicio.</p>
+<p>Se descartó partir de una cola, un motor cliente-servidor o un framework de interfaz separado: agregan despliegue sin cambiar el resultado para el usuario.</p>
+<h2>ADR-002 — Bloque de 50 minutos, jornada 07:00–21:00, día de 24 horas</h2>
+<p>Fecha: 2026-11-16. Estado: aceptada.</p>
+<p>El outcome dice que 3 bloques son 45+5+45+5+45+5 minutos, es decir 150. La especificación fija el bloque en 50 minutos (45 de uso y 5 de transición) y 16 bloques desde las 07:00 hasta las 21:00.</p>
+<p>&quot;Un día&quot; de antelación para cancelar se implementa como 24 horas antes del inicio, para poder probarlo con un reloj fijo. &quot;Sin límite de tiempo&quot; del docente se implementa como excepción a los 60 minutos de antelación, sin permitir desplazar un bloque ya terminado.</p>
+<p>Si el horario institucional real fuera otro, se cambia la tabla de bloques en un solo lugar (<code>RN-01</code>) y se actualizan los criterios que citan horas concretas.</p>
+<h2>ADR-003 — La notificación no bloquea el desplazamiento</h2>
+<p>Fecha: 2026-11-16. Estado: aceptada.</p>
+<p>El outcome pide avisar por correo y ofrecer otro horario. La reserva del docente y el estado <code>desplazada</code> se confirman aunque el SMTP falle. Siempre queda una fila de notificación con el cuerpo (laboratorios alternativos, o la frase de que no hay). Así la evidencia del curso no depende de un buzón externo.</p>
+<h2>ADR-004 — El uso de IA se documenta, no se presenta como otra persona</h2>
+<p>Fecha: 2026-11-16. Estado: aceptada.</p>
+<p>El proyecto pide agentes de IA y un registro en <code>docs/ai-log.md</code> (actividad, herramienta, solicitud, resultado, decisión). Las capturas de esta fase muestran los artefactos producidos y los issues creados en GitHub. No se atribuyen a estudiantes distintos del grupo.</p>
+</body>
+</html>

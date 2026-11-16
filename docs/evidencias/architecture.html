@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>architecture.md</title>
+<style>
+  body { font: 16px/1.45 "Segoe UI", sans-serif; margin: 32px 40px; color: #1a1a1a; background: #fff; max-width: 980px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 17px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f3f3; }
+  code { font-family: ui-monospace, monospace; font-size: 0.92em; background: #f6f6f6; padding: 0 3px; }
+  pre { background: #f6f6f6; padding: 12px; overflow: auto; }
+  pre code { background: transparent; padding: 0; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+<h1>Arquitectura</h1>
+<h2>1. Stack</h2>
+<table><tbody>
+<tr><th>Capa</th><th>Elección</th></tr>
+<tr><td>Lenguaje</td><td>Python 3.12</td></tr>
+<tr><td>API y páginas</td><td>FastAPI, plantillas Jinja2</td></tr>
+<tr><td>Persistencia</td><td>SQLite, un archivo en el entorno local</td></tr>
+<tr><td>Acceso a datos</td><td>SQLAlchemy 2</td></tr>
+<tr><td>Pruebas</td><td>pytest, contra la misma base en memoria o un archivo temporal</td></tr>
+<tr><td>Procesos</td><td>Una aplicación. No hay cola ni servicios aparte en esta versión.</td></tr>
+</tbody></table>
+<p>La libertad tecnológica del proyecto queda cubierta con esta elección. El motivo está en <code>docs/decisions.md</code> (ADR-001).</p>
+<h2>2. Por qué esta forma</h2>
+<p>El resultado que hay que proteger es que dos personas no confirmen el mismo laboratorio a la misma hora, y que la pantalla de disponibilidad sea esa misma verdad. Una sola base y una transacción por operación de escritura bastan. SQLite serializa escrituras, y la restricción de no solapar reservas vive en la transacción de la aplicación más una restricción en el modelo de franjas.</p>
+<p>La interfaz es servidor con formularios. Reservar es: elegir fecha, ver laboratorios, marcar de 1 a 3 bloques, confirmar. Ese camino es el que debe caber en 3 minutos (RNF-01).</p>
+<h2>3. Vista lógica</h2>
+<pre><code>
+Navegador
+
+    |
+
+    |  HTML (consulta y reserva) y JSON (mismas operaciones)
+
+    v
+
+FastAPI
+
+    |-- sesiones y rol
+
+    |-- casos de uso (disponibilidad, reservar, cancelar, desplazar, mantenimiento)
+
+    |-- reglas RN-*  (único lugar donde se decide si una franja cambia de estado)
+
+    v
+
+SQLite
+
+    usuarios, laboratorios, franjas, reservas, notificaciones
+
+</code></pre>
+<p>Las páginas HTML llaman a los mismos casos de uso que la API JSON. No hay una segunda implementación de las reglas en el navegador: el navegador solo impide enviar un formulario incompleto.</p>
+<h2>4. Módulos previstos</h2>
+<pre><code>
+src/reservas/
+
+    main.py              aplicación y rutas
+
+    db.py                motor SQLite y sesión
+
+    models.py            tablas
+
+    rules.py             RN-01 a RN-24, funciones puras donde sea posible
+
+    services.py          transacciones: reservar, cancelar, desplazar, bloquear
+
+    notifications.py     registra la notificación (SMTP opcional)
+
+    templates/           pantallas de consulta y reserva
+
+tests/
+
+    test_rules.py
+
+    test_no_doble_reserva.py
+
+    test_cancelacion.py
+
+    test_desplazamiento.py
+
+    test_aceptacion.py
+
+</code></pre>
+<h2>5. Concurrencia</h2>
+<p>Crear reserva, desplazar y registrar reserva presencial abren una transacción, leen las franjas involucradas, aplican las reglas y escriben reserva más franjas. Si otra transacción ya tomó el cupo, la operación responde conflicto y no deja filas a medias.</p>
+<p>SQLite usa modo WAL en el archivo de desarrollo. Las pruebas de conflicto lanzan dos operaciones sobre el mismo cupo.</p>
+<h2>6. Tiempo</h2>
+<p>Todas las comparaciones de antelación usan una hora inyectada en el caso de uso. En producción es la hora local del servidor. En pruebas es un reloj fijo, para poder afirmar &quot;faltan 59 minutos&quot; sin depender del reloj de la máquina.</p>
+<h2>7. Correo</h2>
+<p><code>notifications.py</code> escribe la fila de notificación con destinatario, asunto y cuerpo. Si existe la variable <code>SMTP_URL</code>, intenta el envío y guarda el resultado. Si no existe, la notificación queda en estado <code>pendiente</code> y el cuerpo queda disponible para la evidencia del curso. El desplazamiento no depende de que el correo salga: si el envío falla, la reserva igual cambia y la notificación queda registrada con error.</p>
+<h2>8. Entornos</h2>
+<table><tbody>
+<tr><th>Entorno</th><th>Base</th><th>Correo</th></tr>
+<tr><td>Desarrollo</td><td><code>data/reservas.db</code></td><td>registro local</td></tr>
+<tr><td>Pruebas</td><td>SQLite temporal por test</td><td>no se envía</td></tr>
+<tr><td>Demostración</td><td>el mismo esquema, con laboratorios de ejemplo</td><td>registro local</td></tr>
+</tbody></table>
+<p>No hay cuentas ni secretos en el repositorio. Un archivo <code>.env.example</code> listará <code>SMTP_URL</code> vacío.</p>
+<h2>9. Qué no entra en la arquitectura</h2>
+<ul>
+<li>Réplicas, caché y balanceo.</li>
+<li>Inicio de sesión con un proveedor externo. La versión de entrega usa usuarios sembrados (estudiante, docente, administrador) y una sesión de servidor.</li>
+</ul>
+</body>
+</html>

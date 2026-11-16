@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>business-rules.md</title>
+<style>
+  body { font: 16px/1.45 "Segoe UI", sans-serif; margin: 32px 40px; color: #1a1a1a; background: #fff; max-width: 980px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 17px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f3f3; }
+  code { font-family: ui-monospace, monospace; font-size: 0.92em; background: #f6f6f6; padding: 0 3px; }
+  pre { background: #f6f6f6; padding: 12px; overflow: auto; }
+  pre code { background: transparent; padding: 0; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+<h1>Reglas de negocio</h1>
+<p>Cada regla es comprobable. La prueba que la cubre está en <code>specs/acceptance-criteria.md</code> y en <code>docs/testing.md</code>.</p>
+<h2>1. Calendario</h2>
+<table><tbody>
+<tr><th>ID</th><th>Regla</th></tr>
+<tr><td>RN-01</td><td>La jornada es de 07:00 a 21:00. Cada bloque dura 50 minutos (45 de uso + 5 de transición). Hay 16 bloques, numerados del 1 al 16. El bloque 1 empieza a las 07:00.</td></tr>
+<tr><td>RN-02</td><td>Una reserva cubre de 1 a 3 bloques consecutivos del mismo laboratorio y de la misma fecha. No cruza de un día a otro.</td></tr>
+<tr><td>RN-03</td><td>El uso efectivo de un bloque son sus primeros 45 minutos. Los 5 minutos finales son transición y no se reservan aparte.</td></tr>
+</tbody></table>
+<h2>2. Quién puede reservar</h2>
+<table><tbody>
+<tr><th>ID</th><th>Regla</th></tr>
+<tr><td>RN-04</td><td>Solo un usuario autenticado con rol estudiante, docente o administrador puede actuar.</td></tr>
+<tr><td>RN-05</td><td>Estudiante y docente crean reservas en línea solo si el inicio del primer bloque es al menos 60 minutos después del momento de la operación.</td></tr>
+<tr><td>RN-06</td><td>El administrador puede registrar una reserva presencial con cualquier antelación, incluida menos de 60 minutos, y también sobre un bloque que empieza el mismo día. No puede reservar un bloque ya terminado.</td></tr>
+<tr><td>RN-07</td><td>Una cuenta no tiene dos reservas en estado <code>confirmada</code> cuyos intervalos de tiempo se solapen, en el mismo laboratorio o en otro.</td></tr>
+</tbody></table>
+<h2>3. Conflicto de cupo</h2>
+<table><tbody>
+<tr><th>ID</th><th>Regla</th></tr>
+<tr><td>RN-08</td><td>Como máximo una reserva en estado <code>confirmada</code> cubre un par (laboratorio, fecha, bloque).</td></tr>
+<tr><td>RN-09</td><td>Si dos solicitudes válidas compiten por el mismo cupo, se confirma la que la base de datos persiste primero. La otra se rechaza. No se crea un cruce.</td></tr>
+<tr><td>RN-10</td><td>No se puede reservar un bloque en estado <code>deshabilitada</code> o <code>mantenimiento</code>.</td></tr>
+<tr><td>RN-11</td><td>Reservar bloques libres los pasa a <code>reservada</code> y crea la reserva en estado <code>confirmada</code>.</td></tr>
+</tbody></table>
+<h2>4. Prioridad del docente</h2>
+<table><tbody>
+<tr><th>ID</th><th>Regla</th></tr>
+<tr><td>RN-12</td><td>Un docente puede desplazar una reserva <code>confirmada</code> de un estudiante sobre los bloques que necesita. No aplica la antelación de 60 minutos.</td></tr>
+<tr><td>RN-13</td><td>El desplazamiento no aplica si el titular es docente o administrador, ni si algún bloque pedido ya terminó.</td></tr>
+<tr><td>RN-14</td><td>Al desplazar: la reserva del estudiante pasa a <code>desplazada</code>; los bloques que el docente toma quedan en una reserva <code>confirmada</code> del docente; los bloques del estudiante que el docente no toma vuelven a <code>libre</code>.</td></tr>
+<tr><td>RN-15</td><td>El sistema registra una notificación al estudiante con los otros laboratorios que estén <code>libre</code> en esos mismos bloques. Si no hay, la notificación indica que no hay alternativa. No se reserva otro laboratorio sin acción del estudiante.</td></tr>
+<tr><td>RN-16</td><td>Un docente no puede desplazarse a sí mismo ni usar el desplazamiento para evadir RN-07. Si el docente ya tiene otra reserva solapada, el desplazamiento se rechaza.</td></tr>
+</tbody></table>
+<h2>5. Cancelación, inasistencia y mantenimiento</h2>
+<table><tbody>
+<tr><th>ID</th><th>Regla</th></tr>
+<tr><td>RN-17</td><td>El titular o el administrador pueden cancelar una reserva <code>confirmada</code> que aún no ha terminado.</td></tr>
+<tr><td>RN-18</td><td>Si la cancelación ocurre 24 horas o más antes del inicio, los bloques de esa reserva pasan a <code>libre</code>.</td></tr>
+<tr><td>RN-19</td><td>Si la cancelación ocurre a menos de 24 horas del inicio, los bloques pasan a <code>deshabilitada</code>.</td></tr>
+<tr><td>RN-20</td><td>Un bloque ya iniciado se trata con la regla de menos de 24 horas: cancelarlo lo deja <code>deshabilitada</code>.</td></tr>
+<tr><td>RN-21</td><td>El administrador puede marcar no-show una reserva <code>confirmada</code> cuyo inicio ya pasó y que no fue cancelada. Los bloques pasan a <code>deshabilitada</code> y la reserva a <code>no_show</code>.</td></tr>
+<tr><td>RN-22</td><td>Solo el administrador pasa un bloque <code>deshabilitada</code> a <code>libre</code>.</td></tr>
+<tr><td>RN-23</td><td>El administrador pasa bloques <code>libre</code> a <code>mantenimiento</code> y, al cerrar el mantenimiento, de <code>mantenimiento</code> a <code>libre</code>. No pone en mantenimiento un bloque <code>reservada</code> sin cancelar o desplazar antes la reserva.</td></tr>
+<tr><td>RN-24</td><td>Una franja <code>deshabilitada</code> o en <code>mantenimiento</code> no se ofrece como alternativa en RN-15.</td></tr>
+</tbody></table>
+<h2>6. Estados</h2>
+<p>Reserva: <code>confirmada</code>, <code>cancelada</code>, <code>desplazada</code>, <code>no_show</code>.</p>
+<p>Bloque por laboratorio y fecha: <code>libre</code>, <code>reservada</code>, <code>deshabilitada</code>, <code>mantenimiento</code>.</p>
+<p>No hay otros estados. Una transición que no esté en las reglas anteriores se rechaza.</p>
+</body>
+</html>

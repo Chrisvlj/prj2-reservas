@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>acceptance-criteria.md</title>
+<style>
+  body { font: 16px/1.45 "Segoe UI", sans-serif; margin: 32px 40px; color: #1a1a1a; background: #fff; max-width: 980px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 17px; margin-top: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f3f3f3; }
+  code { font-family: ui-monospace, monospace; font-size: 0.92em; background: #f6f6f6; padding: 0 3px; }
+  pre { background: #f6f6f6; padding: 12px; overflow: auto; }
+  pre code { background: transparent; padding: 0; }
+  a { color: #0b57d0; }
+</style>
+</head>
+<body>
+<h1>Criterios de aceptación</h1>
+<p>Forma: dado un estado, cuando ocurre una acción, entonces el resultado observable. Cada criterio cita la regla. La prueba automática correspondiente se nombra en <code>docs/testing.md</code>.</p>
+<p>El reloj de los escenarios es fijo: 2026-11-16 08:00, salvo que el criterio diga otra hora. Lab 1 y Lab 2 existen y están activos. Ana es estudiante, Luis es docente, Rosa es administradora.</p>
+<h2>Disponibilidad</h2>
+<h3>CA-01 — Ver el día</h3>
+<p>Dado que el bloque 2 de Lab 1 está <code>libre</code> y el bloque 3 está <code>reservada</code>, cuando Ana consulta la disponibilidad del 2026-11-20, entonces ve esos estados y no puede confirmar el bloque 3.</p>
+<p>Cubre RF-01.</p>
+<h3>CA-02 — Reserva dentro de 3 minutos</h3>
+<p>Dado que Ana ya tiene sesión y hay un bloque libre, cuando recorre consulta, elección y confirmación, entonces el camino son esas tres acciones, sin un paso presencial.</p>
+<p>Cubre RNF-01. Se comprueba con el recorrido de la interfaz, no con un temporizador de prueba.</p>
+<h2>Reserva en línea</h2>
+<h3>CA-03 — Reserva válida</h3>
+<p>Dado un cupo libre dentro de la antelación, cuando Ana reserva los bloques 4 a 6 de Lab 1 el 2026-11-20, entonces existe una reserva <code>confirmada</code>, origen <code>en_linea</code>, y esos bloques quedan <code>reservada</code>.</p>
+<p>Cubre RF-02, RN-02, RN-11. Inicio del bloque 4: 09:30. Antelación mayor a 60 minutos.</p>
+<h3>CA-04 — Más de tres bloques</h3>
+<p>Cuando Ana pide los bloques 1 a 4, entonces la API responde 409 con <code>RN-02</code> y no se escribe reserva.</p>
+<h3>CA-05 — Menos de una hora</h3>
+<p>Dado el reloj en 2026-11-20 09:00 y el bloque 3 empezando a las 08:40 ya pasado, o un bloque que empieza en 30 minutos, cuando Ana intenta reservarlo en línea, entonces recibe <code>RN-05</code> y el cupo sigue <code>libre</code>.</p>
+<h3>CA-06 — Presencial bajo la hora</h3>
+<p>Dado el mismo reloj y un bloque que empieza en 30 minutos, cuando Rosa registra la reserva presencial a nombre de Ana, entonces la reserva queda <code>confirmada</code> con origen <code>presencial</code>.</p>
+<p>Cubre RF-12, RN-06.</p>
+<h2>Doble reserva</h2>
+<h3>CA-07 — Mismo laboratorio</h3>
+<p>Dado que Ana tiene confirmados los bloques 4 a 5 de Lab 1, cuando Luis reserva el bloque 5 de Lab 1, entonces Luis recibe <code>RN-08</code> y sigue existiendo una sola reserva confirmada sobre ese bloque.</p>
+<p>Cubre RF-03, RN-08, RN-09. Esta prueba es obligatoria en <code>tests/test_no_doble_reserva.py</code>.</p>
+<h3>CA-08 — Dos solicitudes a la vez</h3>
+<p>Cuando Ana y Luis confirman al mismo tiempo el bloque 8 de Lab 2, entonces exactamente una respuesta es 201 y la otra es 409 <code>RN-08</code>. Hay una sola fila <code>confirmada</code> para ese cupo.</p>
+<p>Cubre RNF-02.</p>
+<h3>CA-09 — Dos laboratorios a la vez</h3>
+<p>Dado que Ana tiene el bloque 4 de Lab 1, cuando Ana reserva el bloque 4 de Lab 2, entonces recibe <code>RN-07</code> y Lab 2 sigue <code>libre</code> en ese bloque.</p>
+<p>Cubre RF-04.</p>
+<h3>CA-10 — El mismo laboratorio, otro momento</h3>
+<p>Dado que Ana tiene el bloque 4 de Lab 1, cuando Ana reserva el bloque 8 de Lab 1, entonces la segunda reserva se confirma. RN-07 solo corta el solape.</p>
+<h2>Prioridad docente</h2>
+<h3>CA-11 — Desplaza al estudiante</h3>
+<p>Dado que Ana tiene confirmados los bloques 4 a 6 de Lab 1 y falta menos de 60 minutos para el inicio, cuando Luis desplaza esa reserva, entonces la reserva de Ana pasa a <code>desplazada</code>, Luis tiene una <code>confirmada</code> sobre esos bloques y existe una notificación a Ana.</p>
+<p>Cubre RF-06, RN-12, RN-15.</p>
+<h3>CA-12 — Oferta de otro laboratorio</h3>
+<p>Dado CA-11 y que Lab 2 está <code>libre</code> en los bloques 4 a 6, cuando se crea la notificación, entonces el cuerpo nombra Lab 2 y no crea una reserva nueva para Ana.</p>
+<h3>CA-13 — Sin alternativa</h3>
+<p>Dado que ningún otro laboratorio está libre en esos bloques, cuando Luis desplaza, entonces la notificación dice que no hay alternativa.</p>
+<h3>CA-14 — No desplaza a otro docente</h3>
+<p>Dado que Luis ya tiene el bloque 4 de Lab 1, cuando otro docente intenta desplazarlo, entonces recibe rechazo y la reserva de Luis sigue <code>confirmada</code>.</p>
+<p>Cubre RN-13.</p>
+<h3>CA-15 — El docente no queda en dos sitios</h3>
+<p>Dado que Luis ya tiene el bloque 4 de Lab 2, cuando intenta desplazar el bloque 4 de Ana en Lab 1, entonces recibe <code>RN-07</code> y Ana conserva su reserva.</p>
+<p>Cubre RN-16.</p>
+<h2>Cancelación e inasistencia</h2>
+<h3>CA-16 — Con un día o más</h3>
+<p>Dado una reserva que empieza en 25 horas o más, cuando el titular cancela, entonces la reserva queda <code>cancelada</code> y los bloques <code>libre</code>.</p>
+<p>Cubre RF-07, RN-18.</p>
+<h3>CA-17 — Con menos de un día</h3>
+<p>Dado una reserva que empieza en 2 horas, cuando el titular cancela, entonces los bloques quedan <code>deshabilitada</code>.</p>
+<p>Cubre RF-08, RN-19.</p>
+<h3>CA-18 — Nadie más toma una franja deshabilitada</h3>
+<p>Dado CA-17, cuando Luis intenta reservar ese bloque, entonces recibe <code>RN-10</code>.</p>
+<h3>CA-19 — Liberar es solo del administrador</h3>
+<p>Dado un bloque <code>deshabilitada</code>, cuando Ana intenta liberarlo, entonces recibe 403. Cuando Rosa lo libera, el bloque queda <code>libre</code>.</p>
+<p>Cubre RF-10, RN-22.</p>
+<h3>CA-20 — No-show</h3>
+<p>Dado una reserva cuyo inicio ya pasó, cuando Rosa marca no-show, entonces la reserva queda <code>no_show</code> y los bloques <code>deshabilitada</code>.</p>
+<p>Cubre RF-09, RN-21.</p>
+<h2>Mantenimiento</h2>
+<h3>CA-21 — Bloquear y reabrir</h3>
+<p>Cuando Rosa pone el bloque 10 de Lab 1 en mantenimiento, entonces nadie lo reserva. Cuando Rosa cierra el mantenimiento, el bloque vuelve a <code>libre</code>.</p>
+<p>Cubre RF-11, RN-23.</p>
+<h3>CA-22 — No tapar una reserva</h3>
+<p>Dado el bloque 10 <code>reservada</code>, cuando Rosa intenta pasarlo a mantenimiento, entonces la operación se rechaza y la reserva sigue <code>confirmada</code>.</p>
+<h2>Trazabilidad</h2>
+<h3>CA-23 — Queda quién reservó</h3>
+<p>Dado CA-06, cuando se lee la reserva, entonces <code>creada_por</code> es Rosa y <code>usuario_id</code> es Ana.</p>
+<p>Cubre RF-13.</p>
+</body>
+</html>

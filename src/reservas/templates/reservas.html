@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block contenido %}
+<section class="tarjeta">
+  <h1>Mis reservas</h1>
+  {% if reservas %}
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Laboratorio</th><th>Bloques</th><th>Estado</th><th>Origen</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for reserva in reservas %}
+          <tr>
+            <td>{{ reserva.fecha }}</td>
+            <td>{{ reserva.laboratorio_id }}</td>
+            <td>{{ reserva.bloque_inicio }}–{{ reserva.bloque_fin }}</td>
+            <td>{{ reserva.estado }}</td>
+            <td>{{ reserva.origen }}</td>
+            <td>
+              {% if reserva.estado == "confirmada" %}
+                <form method="post" action="/reservas/{{ reserva.id }}/cancelar">
+                  <button type="submit">Cancelar</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No tiene reservas.</p>
+  {% endif %}
+</section>
+{% endblock %}

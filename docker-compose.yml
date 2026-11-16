@@ -1,0 +1,12 @@
+services:
+  reservas:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      RESERVAS_DB: data/reservas.db
+    volumes:
+      - reservas-data:/app/data
+
+volumes:
+  reservas-data:

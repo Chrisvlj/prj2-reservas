@@ -73,3 +73,33 @@ Supuestos que la Fase 1 dejaba abiertos y esta sesión cerró en la especificaci
 | Solicitud | No copiar la plantilla. Tomarla como ejemplo visual y seguir lo que el PDF pide en la presentación. |
 | Resultado | Diez diapositivas: problema y resultado (ODD), especificación (SDD), código, pruebas, el cambio de mitad y el ciclo si piden otro cambio en la sustentación. El color sigue siendo el de la plantilla. |
 | Decisión | No se trasladan historias de usuario, bugs de QA ni las diez restricciones del proyecto 1. Esos puntos no están en el enunciado de este proyecto. |
+
+## 2026-11-16 — Presentación para leer en voz alta
+
+| Campo | Contenido |
+|---|---|
+| Actividad | Rehacer la presentación para que se pueda explicar el proyecto leyendo las diapositivas. |
+| IA utilizada | Cursor, agente CLI Grok 4.7, y la skill pptx de Anthropic con pptxgenjs. |
+| Solicitud | Olvidar el diseño de CitaFácil, detallar el contenido y usar esa skill. |
+| Resultado | Veinte diapositivas en `docs/presentacion/reservas-laboratorios.pptx` y el mismo archivo en `.odp`. Recorren el problema, las métricas, los tres usuarios, la especificación, el calendario, el cupo, la cancelación, el desplazamiento, la arquitectura, la demostración, las 31 pruebas, el tope semanal, el cambio en sala y dónde está la evidencia. Cada diapositiva tiene notas. |
+| Decisión | El tema visual es propio del laboratorio (verde). No se reutiliza el naranja ni el azul de CitaFácil. El generador queda en `docs/presentacion/build-pptx.js`. |
+
+## 2026-11-16 — Presentación con diseño propio
+
+| Campo | Contenido |
+|---|---|
+| Actividad | Rehacer la presentación sin la skill de diapositivas, con un diseño propio y el mismo relato del proyecto. |
+| IA utilizada | Cursor, agente CLI Grok 4.7, con pptxgenjs. |
+| Solicitud | No usar la skill. Hacerla según criterio propio, con un diseño actual y bastante informativo. |
+| Resultado | Diecisiete diapositivas en `docs/presentacion/reservas-laboratorios.pptx` y el mismo archivo en `.odp`. Recorren problema, métricas, usuarios, especificación, calendario, cupo, cancelación, desplazamiento, sistema, demostración, pruebas, tope semanal, cambio en sala y evidencias. Cada diapositiva tiene notas. |
+| Decisión | Fondo claro, barra oscura y un solo acento. El texto se puede leer en voz alta. No se sigue la plantilla de CitaFácil ni el tema verde de la versión anterior. |
+
+## 2026-11-16 — Dos pasadas de revisión del diseño
+
+| Campo | Contenido |
+|---|---|
+| Actividad | Revisar la presentación con tres agentes y aplicar lo que coincidía. |
+| IA utilizada | Cursor, agente CLI Grok 4.7, y tres revisores en paralelo (jerarquía, geometría del lienzo, tipo y contraste), cada uno en dos pasadas. |
+| Solicitud | Varias pasadas con varios agentes, contra patrones de diseño de un lienzo de diapositivas. |
+| Resultado | Se quitó el muro de tarjetas iguales, el cuerpo pasó a tinta oscura, los títulos de contenido a 36 pt y el margen de texto a 0.5 in. El rojo queda en el rótulo de sección, en «Queda deshabilitado» y en el ejemplo de los bloques 4 a 6. La segunda pasada no dejó defectos altos. |
+| Decisión | Se puede presentar esta versión. Los archivos siguen en `docs/presentacion/reservas-laboratorios.pptx` y `.odp`. |
